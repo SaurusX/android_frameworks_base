@@ -122,7 +122,7 @@ public class AudioService extends IAudioService.Stub {
     private Object mSettingsLock = new Object();
     private boolean mMediaServerOk;
     /*
-     * OMAP4 specific intents that the AudioService
+     * OMAP4 and Motorola specific intents that the AudioService
      * will register to recieve
      */
     private static final String ACTION_FM_PLUG = "android.intent.action.FM_PLUG";
@@ -131,6 +131,7 @@ public class AudioService extends IAudioService.Stub {
     private static final String POWER_MODE = "omap.audio.power";
     private static final String MAIN_MIC_CHOICE = "omap.audio.mic.main";
     private static final String SUB_MIC_CHOICE = "omap.audio.mic.sub";
+    private static final string EXTDISP_STATUS_DISPLAY = "com.motorola.intent.action.EXTDISP_STATUS_DISPLAY";
 
     private SoundPool mSoundPool;
     private Object mSoundEffectsLock = new Object();
@@ -333,6 +334,7 @@ public class AudioService extends IAudioService.Stub {
 
         intentFilter.addAction(BluetoothA2dp.ACTION_SINK_STATE_CHANGED);
         intentFilter.addAction(BluetoothHeadset.ACTION_STATE_CHANGED);
+        intentFilter.addAction(EXTDISP_STATUS_DISPLAY);
         intentFilter.addAction(Intent.ACTION_DOCK_EVENT);
         intentFilter.addAction(BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED);
         context.registerReceiver(mReceiver, intentFilter);
@@ -2022,6 +2024,24 @@ public class AudioService extends IAudioService.Stub {
                             AudioSystem.DEVICE_STATE_AVAILABLE,
                             "");
                     mConnectedDevices.put( new Integer(AudioSystem.DEVICE_OUT_AUX_DIGITAL), "");
+                }
+            } else if (action.equals(EXTDISP_STATUS_DISPLAY)) {
+				Log.v(TAG,"Broadcast Receiver: Got action EXTDISP_STATUS_DISPLAY");
+                int state = intent.getIntExtra("audio", 0);
+                boolean isConnected = mConnectedDevices.containsKey(AudioSystem.DEVICE_OUT_HDMI);
+
+                if (audio == 0 && isConnected) {
+                    Log.v(TAG,"Broadcast Receiver: For HDMI Audio State = 0 && isConnected = TRUE");
+                    AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_HDMI,
+                            AudioSystem.DEVICE_STATE_UNAVAILABLE,
+                            "");
+                    mConnectedDevices.remove(AudioSystem.DEVICE_OUT_HDMI);
+                } else if (audio == 1 && !isConnected)  {
+                    Log.v(TAG,"Broadcast Receiver: For HDMI Audio State = 0 && isConnected = FALSE");
+                    AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_HDMI,
+                            AudioSystem.DEVICE_STATE_AVAILABLE,
+                            "");
+                    mConnectedDevices.put( new Integer(AudioSystem.DEVICE_OUT_HDMI), "");
                 }
             } else if (action.equals(BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED)) {
                 int state = intent.getIntExtra(BluetoothHeadset.EXTRA_AUDIO_STATE,
