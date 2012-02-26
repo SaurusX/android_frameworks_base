@@ -2027,7 +2027,7 @@ public class AudioService extends IAudioService.Stub {
                 }
             } else if (action.equals(EXTDISP_STATUS_DISPLAY)) {
 				Log.v(TAG,"Broadcast Receiver: Got action EXTDISP_STATUS_DISPLAY");
-                int state = intent.getIntExtra("audio", 0);
+                int audio = intent.getIntExtra("audio", 0);
                 boolean isConnected = mConnectedDevices.containsKey(AudioSystem.DEVICE_OUT_HDMI);
 
                 if (audio == 0 && isConnected) {
