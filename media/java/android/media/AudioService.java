@@ -2026,22 +2026,24 @@ public class AudioService extends IAudioService.Stub {
                     mConnectedDevices.put( new Integer(AudioSystem.DEVICE_OUT_AUX_DIGITAL), "");
                 }
             } else if (action.equals(EXTDISP_STATUS_DISPLAY)) {
-				Log.v(TAG,"Broadcast Receiver: Got action EXTDISP_STATUS_DISPLAY");
-                int audio = intent.getIntExtra("audio", 0);
+            	Log.v(TAG,"Broadcast Receiver: Got action EXTDISP_STATUS_DISPLAY");
+                boolean audio = intent.getBooleanExtra("audio", false);
                 boolean isConnected = mConnectedDevices.containsKey(AudioSystem.DEVICE_OUT_HDMI);
-
-                if (audio == 0 && isConnected) {
+                if (!audio && isConnected) {
                     Log.v(TAG,"Broadcast Receiver: For HDMI Audio State = 0 && isConnected = TRUE");
                     AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_HDMI,
                             AudioSystem.DEVICE_STATE_UNAVAILABLE,
                             "");
                     mConnectedDevices.remove(AudioSystem.DEVICE_OUT_HDMI);
-                } else if (audio == 1 && !isConnected)  {
+					break;
+                } else if ((audio != true) || isConnected)
+                	break;  {
                     Log.v(TAG,"Broadcast Receiver: For HDMI Audio State = 0 && isConnected = FALSE");
                     AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_HDMI,
                             AudioSystem.DEVICE_STATE_AVAILABLE,
                             "");
                     mConnectedDevices.put( new Integer(AudioSystem.DEVICE_OUT_HDMI), "");
+					break;
                 }
             } else if (action.equals(BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED)) {
                 int state = intent.getIntExtra(BluetoothHeadset.EXTRA_AUDIO_STATE,
