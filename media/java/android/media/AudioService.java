@@ -2035,15 +2035,12 @@ public class AudioService extends IAudioService.Stub {
                             AudioSystem.DEVICE_STATE_UNAVAILABLE,
                             "");
                     mConnectedDevices.remove(AudioSystem.DEVICE_OUT_HDMI);
-					break;
-                } else if ((audio != true) || isConnected)
-                	break;  {
+                } else if ((audio != true) || isConnected)  {
                     Log.v(TAG,"Broadcast Receiver: For HDMI Audio State = 0 && isConnected = FALSE");
                     AudioSystem.setDeviceConnectionState(AudioSystem.DEVICE_OUT_HDMI,
                             AudioSystem.DEVICE_STATE_AVAILABLE,
                             "");
                     mConnectedDevices.put( new Integer(AudioSystem.DEVICE_OUT_HDMI), "");
-					break;
                 }
             } else if (action.equals(BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED)) {
                 int state = intent.getIntExtra(BluetoothHeadset.EXTRA_AUDIO_STATE,
