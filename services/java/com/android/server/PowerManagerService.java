@@ -78,6 +78,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -3043,6 +3044,18 @@ class PowerManagerService extends IPowerManager.Stub
             }
         }
 
+        void dump()
+        {
+          Iterator Iter = iterator();
+          while (true)
+          {
+            if (!Iter.hasNext())
+              return;
+            WakeLock wl = (WakeLock)Iter.next();
+            Slog.d("PowerManagerService", "LockList entry : flags=0x" + Integer.toHexString(wl.flags) + " tag=" + wl.tag);
+          }
+        }
+    
         WakeLock removeLock(IBinder binder)
         {
             int index = getIndex(binder);
