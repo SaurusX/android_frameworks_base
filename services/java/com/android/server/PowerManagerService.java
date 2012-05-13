@@ -170,8 +170,8 @@ class PowerManagerService extends IPowerManager.Stub
     private final int MY_UID;
     private final int MY_PID;
 
-    private final LockList mAcquiredLocks;
-    private boolean mDeepSleepMode;
+    private final LockList mAcquiredLocks = new LockList();
+    private boolean mDeepSleepMode = false;
     private boolean mDoneBooting = false;
     private boolean mBootCompleted = false;
     private int mStayOnConditions = 0;
