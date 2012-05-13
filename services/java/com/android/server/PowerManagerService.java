@@ -817,10 +817,7 @@ class PowerManagerService extends IPowerManager.Stub
             synchronized (mLocks) {
                 acquireWakeLockLocked(flags, lock, uid, pid, tag, ws);
                 Binder.restoreCallingIdentity(ident);	
-                return;	
-                localObject1 = finally;	
-                monitorexit;	
-                throw localObject1;
+                return;
             }
         } finally {
             Binder.restoreCallingIdentity(ident);
