@@ -1040,6 +1040,7 @@ class PowerManagerService extends IPowerManager.Stub
 
     private boolean putReleasedWakeLock(IBinder paramIBinder, int paramInt)
     {
+      boolean i;
       synchronized (this.mAcquiredLocks)
       {
         Slog.d("PowerManagerService", "putReleasedWakeLock");
@@ -1049,18 +1050,17 @@ class PowerManagerService extends IPowerManager.Stub
         Slog.d("PowerManagerService", "putReleasedWakeLock --> remove partial wakelocks into list, size is " + this.mAcquiredLocks.size());
         Slog.d("PowerManagerService", "******mAcquiredLocks contents*****");
         this.mAcquiredLocks.dump();
-        int i;
         if (wl != null)
         {
           Slog.d("PowerManagerService", "putReleasedWakeLock flags=0x" + Integer.toHexString(wl.flags) + " tag= " + wl.tag);
-          i = 1;
+          i = true;
         }
         else
         {
-          i = 0;
+          i = false;
         }
       }
-      return localObject;
+      return i;
     }
 
     private void releaseWakeLockLocked(IBinder lock, int flags, boolean death) {
