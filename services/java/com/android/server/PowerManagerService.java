@@ -379,8 +379,9 @@ class PowerManagerService extends IPowerManager.Stub
         }
 
         public void release() {
-            if ((!mDeepSleepMode) || (putReleasedWakeLock(mToken, 0) != true))) {
-                releaseWakeLockLocked(mToken, 0, false);
+            if (!mRefCounted || --mCount == 0) {
+                if ((!mDeepSleepMode) || (putReleasedWakeLock(mToken, 0) != true))    
+                  releaseWakeLockLocked(mToken, 0, false);
                 mHeld = false;
             }
             if (mCount < 0) {
