@@ -805,20 +805,18 @@ class PowerManagerService extends IPowerManager.Stub
             enforceWakeSourcePermission(uid, pid);
         }
         long ident;
-        synchronized (mLocks)	
+        synchronized (mLocks)        
         {	
           if (mDeepSleepMode)	
           {	
             putAcquiredWakeLocks(flags, lock, uid, pid, tag, ws);	
             return;	
           }	
-          ident = Binder.clearCallingIdentity(); 
         }
+        ident = Binder.clearCallingIdentity(); 
         try {
             synchronized (mLocks) {
                 acquireWakeLockLocked(flags, lock, uid, pid, tag, ws);
-                Binder.restoreCallingIdentity(ident);	
-                return;
             }
         } finally {
             Binder.restoreCallingIdentity(ident);
@@ -1012,10 +1010,11 @@ class PowerManagerService extends IPowerManager.Stub
         }
 
         synchronized (mLocks) {         
-            if ((!mDeepSleepMode) || (putReleasedWakeLock(lock, flags) != true))
+            if ((!mDeepSleepMode) || (putReleasedWakeLock(lock, flags) != true)) {
                 synchronized (mLocks){
                     releaseWakeLockLocked(lock, flags, false);
                 }
+            }
         }
     }
 
